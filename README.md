@@ -1,8 +1,8 @@
 # Chào mừng tới EasyDev!
 
-![EasyDev-MakeDevEasier](https://yt3.ggpht.com/a-/AAuE7mCiJzmLfCJQi5HUNkcIWKMMgtn5H1Vve1DDFtI0IA=s288-c-k-c0xffffffff-no-rj-mo)
+![EasyDev-MakeDevEasier](Logo.png)
 
-Đây là repo lữu giữ những projects được thực hiện và chia sẻ trên channel EasyDev.
+Đây là repo lữu giữ những projects được thực hiện và chia sẻ trên channel [EasyDev](https://www.youtube.com/channel/UCtmI-bK_8Fvb4s2lwMew-hA).
 
 Trong mỗi Project sẽ có readme hướng dẫn riêng.
 
@@ -10,8 +10,8 @@ Cảm ơn các bạn đã theo dõi và đồng hành cùng EasyDev.
 
 **Link:**
 
-- EasyDev Youtube Channel: [Link](https://www.youtube.com/channel/UCP3uGL_OA7q0PanKFq0dSMA/featured)
+- EasyDev Youtube Channel: [Link](https://www.youtube.com/channel/UCtmI-bK_8Fvb4s2lwMew-hA)
 
 ## License
 
-[MIT](https://github.com/HoangTran0410/EasyDev/blob/master/LICENSE)
+[MIT](LICENSE)
