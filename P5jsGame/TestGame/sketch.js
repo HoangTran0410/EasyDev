@@ -75,6 +75,12 @@ function draw() {
   text(bullets.length, vMouse.x, vMouse.y)
 }
 
+function drawWithMouse() {
+  let vMouse = globalToViewport(mouseX, mouseY)
+  let d = 1
+  bullets.push(new Ball(vMouse.x, vMouse.y, 15, random(-d, d), random(-d, d)))
+}
+
 function fire() {
 
   let direction = p5.Vector.sub(createVector(mouseX, mouseY), ball.position);
