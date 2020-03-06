@@ -1,14 +1,16 @@
 class Effect {
-  constructor(x, y) {
+  constructor(x, y, speed = 1) {
     this.position = createVector(x, y)
     this.radius = 0
     this.maxRadius = 200
+
+    this.speed = speed
   }
 
   run() {
     this.display()
     if (!this.isEnd())
-      this.radius++
+      this.radius += this.speed
   }
 
   isEnd() {
@@ -28,8 +30,8 @@ class ListEffect {
     this.effects = []
   }
 
-  add(x, y) {
-    this.effects.push(new Effect(x, y))
+  add(x, y, speed) {
+    this.effects.push(new Effect(x, y, speed))
   }
 
   run() {

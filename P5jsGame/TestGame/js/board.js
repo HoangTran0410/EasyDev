@@ -1,5 +1,16 @@
 class Board {
-  constructor(x, y, w, h, fillColor = '#3ca064', borderColorIn = '#3cfa64', borderColorOut = '#6c3030') {
+  constructor(config = {}) {
+
+    const {
+      x = 0,
+      y = 0,
+      w = 320,
+      h = 550,
+      fillColor = '#3ca064',
+      borderColorIn = '#3cfa64',
+      borderColorOut = '#6c3030'
+    } = config
+
     this.position = createVector(x, y)
     this.size = createVector(w, h)
 

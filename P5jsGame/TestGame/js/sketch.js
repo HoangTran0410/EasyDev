@@ -3,15 +3,16 @@ let board
 let stick
 let pocketed
 let effects
+let currentMode = 'Carom'
 
 function setup() {
-  createCanvas(500, 700)
+  createCanvas(windowWidth, windowHeight)
 
-  init("Carom")
+  init(currentMode)
 }
 
 function draw() {
-  background(255)
+  background(50, 200)
 
   board.display()
   stick.run()
@@ -19,6 +20,7 @@ function draw() {
   pocketed.display()
 
   runBalls()
+  runButtons()
   displayCursor()
 }
 
@@ -38,8 +40,32 @@ function init(mode) {
   board = game.board
   balls = game.balls
   stick = new Stick(balls[0])
-  pocketed = new Pocketed(30, 30, 'horizoltal')
+  pocketed = new Pocketed(board.position.x - 50, 30, 'horizoltal')
   effects = new ListEffect()
+}
+
+function runBalls() {
+  for (let i = 0; i < balls.length; i++) {
+    balls[i].update()
+    balls[i].collisionBoard(board)
+    balls[i].pocket(board)
+    balls[i].blur()
+    balls[i].display()
+
+    for (let j = i + 1; j < balls.length; j++) {
+      balls[i].colisionResolve(balls[j])
+    }
+  }
+}
+
+function runButtons() {
+  if (button('Carom', width / 2 - 100, 10, 100, 30, '#333', '#666')) {
+    init("Carom")
+  }
+
+  if (button('Pool 8', width / 2, 10, 100, 30, '#333', '#666')) {
+    init("Pool 8")
+  }
 }
 
 function displayCursor() {
@@ -49,29 +75,29 @@ function displayCursor() {
   circle(mouseX, mouseY, 10)
 }
 
-function runBalls() {
-  for (let i = 0; i < balls.length; i++) {
-    balls[i].update()
-    balls[i].collisionBoard(board)
-    balls[i].blur()
-    balls[i].display()
+function pointRect(x, y, rx, ry, rw, rh) {
+  return !(
+    x < rx ||
+    x > rx + rw ||
+    y < ry ||
+    y > ry + rh
+  )
+}
 
-    for (let j = i + 1; j < balls.length; j++) {
-      balls[i].colisionResolve(balls[j])
-    }
-  }
+function button(t, x, y, w, h, fillColor, hoverColor) {
+  let hover = pointRect(mouseX, mouseY, x, y, w, h)
 
-  for (let i = 0; i < balls.length; i++) {
-    let holePos = balls[i].pocket(board)
-    if (holePos) {
-      if (balls[i].value == 0) {
-        init()
-        alert('Thua rồi, hahahahahahhahhahaah')
-        return
-      }
-      effects.add(holePos.x, holePos.y)
-      pocketed.addBall(balls[i])
-      balls.splice(i, 1)
-    }
+  fill(hover ? hoverColor : fillColor)
+  stroke(255)
+  rect(x, y, w, h)
+
+  fill(255)
+  noStroke()
+  textAlign(CENTER, CENTER)
+  text(t, x + w / 2, y + h / 2)
+
+  if (mouseIsPressed && hover) {
+    return true
   }
+  return false
 }
