@@ -22,3 +22,23 @@ class Effect {
     circle(this.position.x, this.position.y, this.radius)
   }
 }
+
+class ListEffect {
+  constructor() {
+    this.effects = []
+  }
+
+  add(x, y) {
+    this.effects.push(new Effect(x, y))
+  }
+
+  run() {
+    for (let i = 0; i < this.effects.length; i++) {
+      this.effects[i].run()
+
+      if (this.effects[i].isEnd()) {
+        this.effects.splice(i, 1)
+      }
+    }
+  }
+}

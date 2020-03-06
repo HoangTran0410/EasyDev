@@ -5,7 +5,7 @@ class Stick {
     this.len = 150
     this.direction = createVector(0, 0)
     this.strength = 0
-    this.maxStrength = 20
+    this.maxStrength = 50
     this.pulling = false
     this.pullDirection = 1
   }
@@ -20,9 +20,14 @@ class Stick {
     this.pulling = true
   }
 
+  run() {
+    this.update()
+    this.display()
+  }
+
   update() {
     if (this.pulling) {
-      this.strength += 0.25 * this.pullDirection
+      this.strength += (this.maxStrength / 60) * this.pullDirection
 
       if (this.strength > this.maxStrength) {
         this.strength = this.maxStrength
@@ -39,10 +44,10 @@ class Stick {
     if (!this.pulling) return
 
     // stick
-    this.direction = p5.Vector.sub(this.ball.position, createVector(mouseX, mouseY))
+    let mouseDirection = p5.Vector.sub(this.ball.position, createVector(mouseX, mouseY))
+    let pull = mouseDirection.setMag(map(this.strength, 0, this.maxStrength, 0, 100) + this.ball.radius)
 
-    let pull = this.direction.copy().setMag(map(this.strength, 0, this.maxStrength, 0, 100) + this.ball.radius)
-    this.direction.setMag(this.len)
+    this.direction = mouseDirection.copy().setMag(this.len)
 
     let { x, y } = this.ball.position
 
@@ -54,8 +59,14 @@ class Stick {
     // direction hightlight
     push()
     let hl = this.direction.copy().mult(-1).setMag(500)
-    stroke(255)
-    strokeWeight(map(this.strength, 0, this.maxStrength, 0, 10))
+
+    stroke(255, 50)
+    strokeWeight(this.ball.radius * 2)
+    line(x, y, x + hl.x, y + hl.y)
+
+    stroke(255, 150)
+    let s = map(this.strength, 0, this.maxStrength, 0, 10)
+    strokeWeight(s)
     drawingContext.setLineDash([5, 10])
     line(x, y, x + hl.x, y + hl.y)
     pop()

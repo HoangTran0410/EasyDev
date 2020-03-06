@@ -1,17 +1,21 @@
 class Ball {
-  constructor(x, y, radius, color, value) {
-    this.position = createVector(x || 0, y || 0)
-    this.radius = radius || 10
-    this.color = color || '#fff'
+  constructor(x = 0, y = 0, radius = 10, color = '#fff', value) {
+    this.position = createVector(x, y)
+    this.radius = radius
+    this.color = color
     this.value = value
-    this.mass = this.radius
+    this.mass = this.radius //(4 * PI / 3) * (this.radius ** 3)
+    this.friction = 0.99
 
     this.velocity = createVector(0, 0)
+    this.blurs = []
   }
 
   update() {
-    this.position.add(this.velocity)
-    this.velocity.mult(0.985)
+    let vel = this.velocity.copy().mult((deltaTime / 50))
+
+    this.position.add(vel)
+    this.velocity.mult(this.friction)
   }
 
   display() {
@@ -19,7 +23,6 @@ class Ball {
     noStroke()
     circle(this.position.x, this.position.y, this.radius * 2)
 
-    noStroke()
     fill(255)
     textSize(14)
     textAlign(CENTER, CENTER)
@@ -28,7 +31,7 @@ class Ball {
 
   pocket(board) {
     for (let hole of board.holes) {
-      let holePos = board.getRealPos(hole[0], hole[1])
+      let holePos = createVector(hole[0], hole[1])
       let d = dist(
         this.position.x,
         this.position.y,
@@ -44,23 +47,59 @@ class Ball {
     return false
   }
 
-  collisionBoard(board) {
-    if ((this.position.x - this.radius) < board.position.x) {
-      this.velocity.x *= -1
-      this.position.x = board.position.x + this.radius
+  blur() {
+    if (this.velocity.mag() > 0.1) {
+
+      // add current position to blur path
+      this.blurs.push({
+        x: this.position.x,
+        y: this.position.y
+      })
+
+      // limit size of path
+      if (this.blurs.length > 10) this.blurs.shift()
+
+      // show path
+      noFill()
+      stroke('#fff3')
+      strokeJoin(ROUND)
+      strokeWeight(this.radius * 2)
+
+      beginShape()
+      for (let b of this.blurs) {
+        vertex(b.x, b.y)
+      }
+      endShape()
+
+    } else {
+      // delete old blurs path after ball stopped
+      this.blurs = []
     }
-    else if (this.position.x + this.radius > board.position.x + board.size.x) {
-      this.velocity.x *= -1
-      this.position.x = board.position.x + board.size.x - this.radius
+  }
+
+  collisionBoard(board) {
+
+    let { x: ballX, y: ballY } = this.position
+    let { x: boardX, y: boardY } = board.position
+    let { x: boardW, y: boardH } = board.size
+    let ballR = this.radius
+
+    if ((ballX - ballR) < boardX) {
+      this.velocity.x *= -this.friction
+      this.position.x = boardX + ballR
+    }
+    else if (ballX + ballR > boardX + boardW) {
+      this.velocity.x *= -this.friction
+      this.position.x = boardX + boardW - ballR
     }
 
-    if ((this.position.y - this.radius) < board.position.y) {
-      this.velocity.y *= -1
-      this.position.y = board.position.x + this.radius
+    if ((ballY - ballR) < boardY) {
+      this.velocity.y *= -this.friction
+      this.position.y = boardY + ballR
     }
-    else if (this.position.y + this.radius > board.position.y + board.size.y) {
-      this.velocity.y *= -1
-      this.position.y = board.position.y + board.size.y - this.radius
+    else if (ballY + ballR > boardY + boardH) {
+      this.velocity.y *= -this.friction
+      this.position.y = boardY + boardH - ballR
     }
   }
 
@@ -84,10 +123,11 @@ class Ball {
     const yDist = b2.position.y - b1.position.y;
 
     if (vxDiff * xDist + vyDiff * yDist >= 0) {
-      const angle = -Math.atan2(b2.position.y - b1.position.y, b2.position.x - b1.position.x);
+      // const angle = -Math.atan2(b2.position.y - b1.position.y, b2.position.x - b1.position.x);
+      const angle = -p5.Vector.sub(b1.position, b2.position).heading()
 
-      const m1 = b1.mass || 1
-      const m2 = b2.mass || 1
+      const m1 = b1.mass
+      const m2 = b2.mass
 
       const u1 = b1.velocity.copy().rotate(angle)// rotateVector(b1.velocity, angle);
       const u2 = b2.velocity.copy().rotate(angle)// rotateVector(b2.velocity, angle);

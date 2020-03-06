@@ -1,18 +1,58 @@
 class Board {
-  constructor(x, y, w, h) {
+  constructor(x, y, w, h, fillColor = '#3ca064', borderColorIn = '#3cfa64', borderColorOut = '#6c3030') {
     this.position = createVector(x, y)
     this.size = createVector(w, h)
 
+    this.fillColor = fillColor
+    this.borderColorIn = borderColorIn
+    this.borderColorOut = borderColorOut
+
     this.border = 25
     this.defaultHoleSize = 17
-    this.holes = [
-      [5, 5],
-      [5, this.size.y - 5],
-      [this.size.x - 5, 5],
-      [this.size.x - 5, this.size.y - 5],
-      [0, this.size.y * .5],
-      [this.size.x, this.size.y * .5],
-    ]
+    this.holes = []
+  }
+
+  addHoles(holes) {
+    for (let hole of holes) {
+      if (typeof (hole) === "string") {
+
+        let offset = 5
+        let leftBoard = this.position.x
+        let rightBoard = this.size.x + leftBoard
+        let topBoard = this.position.y
+        let bottomBoard = this.size.y + topBoard
+
+        switch (hole) {
+          case HOLEPOS.topleft: {
+            this.holes.push([leftBoard + offset, topBoard + offset])
+            break
+          }
+          case HOLEPOS.topright: {
+            this.holes.push([rightBoard - offset, topBoard + offset])
+            break
+          }
+          case HOLEPOS.bottomleft: {
+            this.holes.push([leftBoard + offset, bottomBoard - offset])
+            break
+          }
+          case HOLEPOS.bottomright: {
+            this.holes.push([rightBoard - offset, bottomBoard - offset])
+            break
+          }
+          case HOLEPOS.left: {
+            this.holes.push([leftBoard + offset, (bottomBoard + topBoard) / 2 - offset])
+            break
+          }
+          case HOLEPOS.right: {
+            this.holes.push([rightBoard - offset, (bottomBoard + topBoard) / 2 - offset])
+            break
+          }
+        }
+      }
+      else {
+        this.holes.push(hole)
+      }
+    }
   }
 
   getRealPos(x, y) {
@@ -26,24 +66,25 @@ class Board {
     push()
     translate(this.position.x, this.position.y)
 
+    // display board
     noStroke()
+    fill(this.borderColorOut)
+    rect(-this.border * 1.25, -this.border * 1.25, this.size.x + this.border * 2.5, this.size.y + this.border * 2.5)
 
-    fill(100, 50, 42)
-    rect(-this.border, -this.border, this.size.x + this.border * 2, this.size.y + this.border * 2)
-
-    fill(60, 250, 100)
+    fill(this.borderColorIn)
     rect(-this.border * .5, -this.border * .5, this.size.x + this.border, this.size.y + this.border)
 
-    fill(60, 160, 100)
+    fill(this.fillColor)
     rect(0, 0, this.size.x, this.size.y)
 
+    pop()
+
+    // display holes
     fill(60, 160, 100)
     stroke(40, 150, 80)
     strokeWeight(2)
     for (let hole of this.holes) {
       circle(hole[0], hole[1], hole[2] || this.defaultHoleSize * 2)
     }
-
-    pop()
   }
 }
