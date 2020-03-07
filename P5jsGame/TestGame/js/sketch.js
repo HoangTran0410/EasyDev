@@ -3,7 +3,7 @@ let board
 let stick
 let pocketed
 let effects
-let currentMode = 'Carom'
+let currentMode = 'Pool 8'
 
 function setup() {
   createCanvas(windowWidth, windowHeight)
