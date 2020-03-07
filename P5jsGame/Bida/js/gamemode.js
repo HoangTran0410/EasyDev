@@ -61,10 +61,8 @@ const GAMEMODE = {
         effects.add(hole.x, hole.y)
 
         if (this.value == 0) {
-          let x = board.position.x + board.size.x / 2
-          let y = board.position.y + board.size.y - 100
-          this.position = createVector(x, y)
-          this.velocity = createVector(0, 0)
+          this.setDrag(true)
+
           return
         }
         pocketed.addBall(this)
