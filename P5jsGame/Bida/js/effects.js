@@ -20,7 +20,7 @@ class Effect {
   display() {
     noFill()
     strokeWeight(3)
-    stroke(255, 0, 0, map(this.radius, 0, this.maxRadius, 255, 0))
+    stroke(0, 255, 0, map(this.radius, 0, this.maxRadius, 255, 0))
     circle(this.position.x, this.position.y, this.radius)
   }
 }
