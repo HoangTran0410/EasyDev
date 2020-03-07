@@ -8,7 +8,7 @@ const GAMEMODE = {
     holes: [],
     balls: [
       // [x, y, radius, color, value]
-      [160, 500, 15, 'white', ''],
+      [160, 500, 14, 'white', ''],
       [120, 100, 14, 'red', ''],
       [200, 100, 14, 'yellow', ''],
     ],
@@ -64,6 +64,7 @@ const GAMEMODE = {
           let x = board.position.x + board.size.x / 2
           let y = board.position.y + board.size.y - 100
           this.position = createVector(x, y)
+          this.velocity = createVector(0, 0)
           return
         }
         pocketed.addBall(this)
