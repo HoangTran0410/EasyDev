@@ -36,6 +36,7 @@ function mouseReleased() {
 
 function init(mode) {
   let game = getGameMode(mode)
+  currentMode = mode
 
   board = game.board
   balls = game.balls
@@ -48,22 +49,25 @@ function runBalls() {
   for (let i = 0; i < balls.length; i++) {
     balls[i].update()
     balls[i].collisionBoard(board)
-    balls[i].pocket(board)
     balls[i].blur()
     balls[i].display()
 
     for (let j = i + 1; j < balls.length; j++) {
       balls[i].colisionResolve(balls[j])
     }
+
+    balls[i].pocket(board)
   }
 }
 
 function runButtons() {
-  if (button('Carom', width / 2 - 100, 10, 100, 30, '#333', '#666')) {
+  let isCaromMode = (currentMode == "Carom")
+
+  if (button('Carom', width / 2 - 100, 10, 100, 30, (isCaromMode ? '#666' : '#333'), '#666')) {
     init("Carom")
   }
 
-  if (button('Pool 8', width / 2, 10, 100, 30, '#333', '#666')) {
+  if (button('Pool 8', width / 2, 10, 100, 30, (isCaromMode ? '#333' : '#666'), '#666')) {
     init("Pool 8")
   }
 }
@@ -89,6 +93,7 @@ function button(t, x, y, w, h, fillColor, hoverColor) {
 
   fill(hover ? hoverColor : fillColor)
   stroke(255)
+  strokeWeight(1)
   rect(x, y, w, h)
 
   fill(255)
