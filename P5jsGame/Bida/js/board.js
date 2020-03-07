@@ -91,8 +91,9 @@ class Board {
     pop()
 
     // display holes
-    fill(60, 160, 100)
-    stroke(40, 150, 80)
+    // fill('#3c9964')
+    fill(this.fillColor)
+    stroke('#258f4b')
     strokeWeight(2)
     for (let hole of this.holes) {
       circle(hole[0], hole[1], hole[2] || this.defaultHoleSize * 2)

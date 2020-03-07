@@ -6,7 +6,7 @@ const THEMEBOARD = {
   },
   green: {
     fillColor: '#3ca064',
-    borderColorIn: '#3cfa64',
+    borderColorIn: '#36eb5c',
     borderColorOut: '#6c3030',
   }
 }

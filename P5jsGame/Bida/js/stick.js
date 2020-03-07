@@ -2,6 +2,7 @@ class Stick {
   constructor(ball) {
     this.ball = ball
 
+    this.active = false
     this.len = 150
     this.direction = createVector(0, 0)
     this.strength = 0
@@ -10,19 +11,29 @@ class Stick {
     this.pullDirection = 1
   }
 
-  hit() {
-    this.pulling = false
-    this.ball.velocity = this.direction.copy().setMag(-this.strength)
-    this.strength = 0
+  run() {
+    if (this.active) {
+
+      this.update()
+      this.display()
+
+      if (mouseEvents.isPressed()) {
+        this.pull()
+
+      } else if (mouseEvents.isReleased()) {
+        this.hit()
+      }
+    }
   }
 
   pull() {
     this.pulling = true
   }
 
-  run() {
-    this.update()
-    this.display()
+  hit() {
+    this.pulling = false
+    this.ball.velocity = this.direction.copy().setMag(-this.strength)
+    this.strength = 0
   }
 
   update() {
@@ -41,11 +52,11 @@ class Stick {
   }
 
   display() {
-    if (!this.pulling) return
+    // if (!this.pulling) return
 
     // stick
     let mouseDirection = p5.Vector.sub(this.ball.position, createVector(mouseX, mouseY))
-    let pull = mouseDirection.setMag(map(this.strength, 0, this.maxStrength, 0, 100) + this.ball.radius)
+    let pull = mouseDirection.setMag(map(this.strength, 0, this.maxStrength, 0, 100) + this.ball.radius + 5)
 
     this.direction = mouseDirection.copy().setMag(this.len)
 
@@ -58,17 +69,17 @@ class Stick {
 
     // direction hightlight
     push()
-    let hl = this.direction.copy().mult(-1).setMag(500)
+    let s = map(this.strength, 0, this.maxStrength, 0, 1000)
+    let hl = this.direction.copy().mult(-1).setMag(s)
 
     stroke(255, 50)
     strokeWeight(this.ball.radius * 2)
     line(x, y, x + hl.x, y + hl.y)
 
-    stroke(255, 150)
-    let s = map(this.strength, 0, this.maxStrength, 0, 10)
-    strokeWeight(s)
-    drawingContext.setLineDash([5, 10])
-    line(x, y, x + hl.x, y + hl.y)
+    // stroke(255, 150)
+    // strokeWeight(s)
+    // drawingContext.setLineDash([5, 10])
+    // line(x, y, x + hl.x, y + hl.y)
     pop()
   }
 }

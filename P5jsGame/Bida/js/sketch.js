@@ -14,22 +14,16 @@ function setup() {
 function draw() {
   background(50, 200)
 
+  mouseEvents.run()
   board.display()
-  stick.run()
   effects.run()
   pocketed.display()
 
   runBalls()
+  runStick()
   runButtons()
+
   displayCursor()
-}
-
-function mousePressed() {
-  stick.pull()
-}
-
-function mouseReleased() {
-  stick.hit()
 }
 
 // =========================================
@@ -52,12 +46,28 @@ function runBalls() {
     balls[i].blur()
     balls[i].display()
 
-    for (let j = i + 1; j < balls.length; j++) {
-      balls[i].colisionResolve(balls[j])
-    }
+    if (balls[i].physicsOn) {
 
-    balls[i].pocket(board)
+      for (let j = i + 1; j < balls.length; j++) {
+        balls[i].colisionResolve(balls[j])
+      }
+
+      balls[i].pocket(board)
+    }
   }
+}
+
+function canPull() {
+  for (let ball of balls) {
+    if (ball.velocity.mag() > 0.5 || ball.dragging) return false
+  }
+
+  return true
+}
+
+function runStick() {
+  stick.active = canPull()
+  stick.run()
 }
 
 function runButtons() {

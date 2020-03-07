@@ -20,9 +20,11 @@ class Ball {
     this.color = color
     this.value = value
 
+    this.dragging = false
+    this.physicsOn = true
+    this.velocity = createVector(0, 0)
     this.mass = this.radius //(4 * PI / 3) * (this.radius ** 3)
     this.friction = 0.99
-    this.velocity = createVector(0, 0)
     this.blurs = []
 
     this.onCollideBall = events.onCollideBall
@@ -31,10 +33,16 @@ class Ball {
   }
 
   update() {
-    let vel = this.velocity.copy().mult((deltaTime / 50))
+    if (this.dragging) {
+      this.position = createVector(mouseX, mouseY)
+      if (mouseEvents.isReleased()) this.setDrag(false)
 
-    this.position.add(vel)
-    this.velocity.mult(this.friction)
+    } else {
+      let vel = this.velocity.copy().mult((deltaTime / 50))
+
+      this.position.add(vel)
+      this.velocity.mult(this.friction)
+    }
   }
 
   display() {
@@ -46,6 +54,12 @@ class Ball {
     textSize(14)
     textAlign(CENTER, CENTER)
     text(this.value, this.position.x, this.position.y)
+  }
+
+  setDrag(drag) {
+    this.dragging = drag
+    this.physicsOn = !drag
+    this.velocity.mult(0)
   }
 
   pocket(board) {
@@ -91,7 +105,8 @@ class Ball {
       // }
       // endShape()
 
-      fill("#fff1")
+      // fill("#fff1")
+      fill(this.color + '22')
       noStroke()
       for (let b of this.blurs) {
         circle(b.x, b.y, this.radius * 2)
