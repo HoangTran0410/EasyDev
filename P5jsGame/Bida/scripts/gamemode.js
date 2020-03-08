@@ -65,9 +65,9 @@ const GAMEMODE = {
 
           return
         }
+
         pocketed.addBall(this)
         balls.splice(balls.indexOf(this), 1)
-
       }
     }
   }
