@@ -74,7 +74,7 @@ class PeerControl {
     });
   }
 
-  connectTo(id, { onOpenConnect, onData, onCloseConnect } = {}) {
+  connectTo(id, { onOpenConnect, onDataReceived, onCloseConnect } = {}) {
     // Close old connection
     if (this.conn) {
       this.conn.close()
@@ -88,7 +88,7 @@ class PeerControl {
     this.conn.on('open', () => {
       console.log("Connected to: " + this.conn.peer);
 
-      onOpenConnect(this.conn)
+      onOpenConnect(this.conn.peer)
 
       // Check URL params for comamnds that should be sent immediately
       // var command = getUrlParam("command");

@@ -11,23 +11,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight)
 
   init(currentMode)
-
-  peerControl = new PeerControl()
-
-  peerControl.init({
-    onOpenPeer: async function (id) {
-      console.log(id)
-
-      let { value } = await Swal.fire({
-        title: 'Insert Coin',
-        input: 'text',
-        showCancelButton: true,
-      })
-
-      alert(value)
-
-    }
-  })
+  setupPeer()
 }
 
 function draw() {
@@ -46,6 +30,31 @@ function draw() {
 }
 
 // =========================================
+
+function setupPeer() {
+  peerControl = new PeerControl()
+
+  peerControl.init({
+    onOpenPeer: async function (id) {
+
+      let { value: otherId } = await Swal.fire({
+        title: 'Connect to other',
+        text: 'Your id: ' + id,
+        input: 'text',
+        showCancelButton: true,
+      })
+
+      peerControl.connectTo(otherId, {
+        onDataReceived: function (data) {
+          console.log(data)
+        },
+        onOpenConnect: function (otherPeer) {
+          console.log(peer)
+        }
+      })
+    }
+  })
+}
 
 function init(mode) {
   let game = getGameMode(mode)
