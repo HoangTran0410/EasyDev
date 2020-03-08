@@ -101,7 +101,7 @@ class PeerControl {
       onDataReceived(data)
     });
 
-    conn.on('close', function () {
+    this.conn.on('close', function () {
       onCloseConnect()
     });
   }
