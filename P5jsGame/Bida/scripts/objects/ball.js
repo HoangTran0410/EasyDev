@@ -94,23 +94,23 @@ class Ball {
       if (this.blurs.length > 10) this.blurs.shift()
 
       // show path
-      // noFill()
-      // stroke('#fff3')
-      // strokeJoin(ROUND)
-      // strokeWeight(this.radius * 2)
+      noFill()
+      stroke('#fff3')
+      strokeJoin(ROUND)
+      strokeWeight(this.radius * 2)
 
-      // beginShape()
-      // for (let b of this.blurs) {
-      //   vertex(b.x, b.y)
-      // }
-      // endShape()
+      beginShape()
+      for (let b of this.blurs) {
+        vertex(b.x, b.y)
+      }
+      endShape()
 
       // fill("#fff1")
-      fill(this.color + '22')
-      noStroke()
-      for (let b of this.blurs) {
-        circle(b.x, b.y, this.radius * 2)
-      }
+      // fill(this.color + '22')
+      // noStroke()
+      // for (let b of this.blurs) {
+      //   circle(b.x, b.y, this.radius * 2)
+      // }
 
     } else {
       // delete old blurs path after ball stopped
