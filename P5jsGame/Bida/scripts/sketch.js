@@ -26,6 +26,10 @@ function draw() {
   displayCursor()
 }
 
+function touchMoved() {
+  return false;
+}
+
 // =========================================
 
 function init(mode) {
